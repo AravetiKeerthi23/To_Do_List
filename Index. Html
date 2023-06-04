@@ -1,84 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8" />
+  <title>To-Do List</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2; /* Replace with your desired background color */
+}
+.container {
+  width: 300px;
+  margin: 20px auto;
+  background-color: #ff0000; /* Replace with your desired background color */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+    h1 {
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    .task-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px;
+      background-color: #f4f4f43b;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .input-container {
+  display: flex;
+}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-    <title>To-Do List</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
-    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+.input-container input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
 
-    <link rel="stylesheet" href="style.css" />
+.input-container button {
+  padding: 10px 20px;
+  margin-left: 5px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: #4e4caf;
+  color: #ffffff71;
+  border: none;
+  cursor: pointer;
+}
+
+.input-container button:hover {
+  background-color: #454ba0;
+}
+
+    .task-item .delete-button {
+      color: rgb(255, 213, 0);
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
-    <header>
-        <div class="main_heading">
-            <h1>To-Do List</h1>
-        </div>
-    </header>
-
-
-    <div class="modal red" id="Modal">
-        <div class="content" id="content">
-            <span id="modal-text">
-        Some Text
-      </span>
-            <button onclick="closemodal()" class="modal-btn">x</button>
-        </div>
+  <div class="container">
+    <h1>To-Do List</h1>
+    <div class="input-container">
+      <input type="text" id="taskInput" placeholder="Add a task...">
+      <button id="addButton">Add</button>
     </div>
-    <span class="todayDate">Day <span id="d1"></span></span>
-    <form class="todoform">
-        <input type="text" placeholder="Add a new Task .." class="todo-input" required />
-        <div class="abc">
-            <button class="todo-button" type="submit">
-      <i class="fas fa-plus-square"></i>
-    </button>
-            <div class="select">
-                <select name="todos" class="filter-todo " style="color:black;">
-        <option value="all" style="color:black;">All</option>
-        <option value="completed" style="color:black;">Completed</option>
-        <option value="incomplete" style="color:black;">Incomplete</option>
-      </select>
-            </div>
-        </div>
-    </form>
-    <div class="todo-container">
-        <ul class="todo-list"></ul>
-    </div>
-    <button class="delete-all" onclick="show_alert()">Delete All Tasks</button>
+    <ul class="task-list" id="taskList"></ul>
+  </div>
+  
 
-    <div class="confirmation_box hide " id="confirmation_box">
-        <div class="optbox_header">
-            <i class="fas fa-times" onclick="goback()"></i>
-        </div>
-        <p>Are you sure you want to delete all tasks?</p>
-        <div class="option_box">
-            <div class="proceed" onclick="deleteAll();">Yes</div>
-            <div class="donot_proceed" onclick="goback()">No</div>
-        </div>
-    </div>
+  <script>
+   // Get the input, button, and ul elements
+const taskInput = document.getElementById("taskInput");
+const addButton = document.getElementById("addButton");
+const taskList = document.getElementById("taskList");
 
-    <footer class="footer">
-        <div class="social-media">
-            <!-- instagram -->
-            <a class="link" href="https://www.instagram.com/vivek_30102/" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="images/instagram.svg" alt="instagram" /></a>
-            <!-- linkedin -->
-            <a class="link" href="https://www.linkedin.com/in/vivek-nishad-30102/" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="images/linkedin.svg" alt="linkedin" /></a>
-            <!-- gmail -->
-            <a class="link" href="google_plus: vivekjnishad@gmail.com" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="images/gmail.svg" alt="gmail" /></a>
-            <!-- github -->
-            <a class="link" href="https://github.com/Vivek30102" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="images/github.svg" alt="Github" /></a>
+// Add event listener to button for adding tasks
+addButton.addEventListener("click", function() {
+  if (taskInput.value !== "") {
+    addTask(taskInput.value);
+    taskInput.value = "";
+  }
+});
 
-        </div>
-        <p class="footer-desc">This project is done by <strong>Vivek Nishad</strong> as task1 of Let's Grow More</a>
-        </p>
-    </footer>
+// Add event listener to input element for adding tasks using Enter key
+taskInput.addEventListener("keydown", function(event) {
+  if (event.key === "Enter" && taskInput.value !== "") {
+    addTask(taskInput.value);
+    taskInput.value = "";
+  }
+});
 
-    <script src="app.js"></script>
+// Function to add a new task
+function addTask(task) {
+  const li = document.createElement("li");
+  li.className = "task-item";
+  li.innerHTML = `
+    <span>${task}</span>
+    <span class="delete-button" onclick="removeTask(this)">X</span>
+  `;
+  taskList.appendChild(li);
+}
 
+// Function to remove a task
+function removeTask(taskElement) {
+  const listItem = taskElement.parentElement;
+  taskList.removeChild(listItem);
+}
+  </script>
 </body>
-
 </html>
